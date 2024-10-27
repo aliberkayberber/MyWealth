@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWealth.Data.Context;
 
@@ -11,9 +12,11 @@ using MyWealth.Data.Context;
 namespace MyWealth.Data.Migrations
 {
     [DbContext(typeof(MyWealthDbContext))]
-    partial class MyWealthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027144510_developing")]
+    partial class developing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

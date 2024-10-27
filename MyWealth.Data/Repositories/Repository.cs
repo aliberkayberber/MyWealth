@@ -23,37 +23,53 @@ namespace MyWealth.Data.Repositories
 
         public void Add(TEntity entity)
         {
-            throw new NotImplementedException();
+           _dbSet.Add(entity);
         }
 
         public void Delete(TEntity entity, bool softDelete = true)
         {
-            throw new NotImplementedException();
+            if (softDelete)
+            {
+                entity.ModifiedDate = DateTime.Now;
+                entity.IsDeleted = true;
+                _dbSet.Update(entity);
+            }
+            else
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var entity = _dbSet.Find(id);
+            Delete(entity);
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _dbSet.Find(predicate);
         }
 
         public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
         {
-            throw new NotImplementedException();
+            return predicate is null ? _dbSet : _dbSet.Where(predicate);
+        }
+
+        public List<TEntity> GetAllList()
+        {
+            return _dbSet.ToList();
         }
 
         public TEntity GetById(int id)
         {
-            throw new NotImplementedException();
+            return _dbSet.FirstOrDefault(x => x.Id == id);
         }
 
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity.ModifiedDate= DateTime.Now;
+            _dbSet.Update(entity);
         }
     }
 }

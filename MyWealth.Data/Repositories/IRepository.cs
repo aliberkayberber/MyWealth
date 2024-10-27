@@ -23,5 +23,7 @@ namespace MyWealth.Data.Repositories
 
         IQueryable<TEntity> GetAll(Expression<Func<TEntity,bool >> predicate = null);
 
+        List<TEntity> GetAllList();
+
     }
 }

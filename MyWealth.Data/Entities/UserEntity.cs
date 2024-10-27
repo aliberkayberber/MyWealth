@@ -18,9 +18,9 @@ namespace MyWealth.Data.Entities
 
         public UserType UserType { get; set; }
 
-        public List<PortfolioEntity> Portfolio { get; set; }
+        public List<PortfolioEntity>? Portfolio { get; set; } = new List<PortfolioEntity>();
 
-        public List<CommentEntity> Comments { get; set; }
+        public List<CommentEntity>? Comments { get; set; } = new List<CommentEntity>();
 
     }
 

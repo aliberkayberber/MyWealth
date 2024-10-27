@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWealth.Data.Context;
 
@@ -11,9 +12,11 @@ using MyWealth.Data.Context;
 namespace MyWealth.Data.Migrations
 {
     [DbContext(typeof(MyWealthDbContext))]
-    partial class MyWealthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241026162530_deveopinf")]
+    partial class deveopinf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace MyWealth.Data.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StockId")
+                    b.Property<int?>("StockId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -51,14 +54,14 @@ namespace MyWealth.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int?>("UserEntityId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StockId");
 
-                    b.HasIndex("UserEntityId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -175,15 +178,17 @@ namespace MyWealth.Data.Migrations
                 {
                     b.HasOne("MyWealth.Data.Entities.StockEntity", "Stock")
                         .WithMany("Comments")
-                        .HasForeignKey("StockId")
+                        .HasForeignKey("StockId");
+
+                    b.HasOne("MyWealth.Data.Entities.UserEntity", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWealth.Data.Entities.UserEntity", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("UserEntityId");
-
                     b.Navigation("Stock");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyWealth.Data.Entities.PortfolioEntity", b =>

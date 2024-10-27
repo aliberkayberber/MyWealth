@@ -26,9 +26,9 @@ namespace MyWealth.Data.Entities
 
         // Relations property
 
-        public List<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
+        public List<CommentEntity>? Comments { get; set; } = new List<CommentEntity>();
 
-        public List<PortfolioEntity> Portfolio { get; set; }
+        public List<PortfolioEntity>? Portfolio { get; set; } = new List<PortfolioEntity>();
     }
 
 

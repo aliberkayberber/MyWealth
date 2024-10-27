@@ -10,18 +10,18 @@ namespace MyWealth.Data.Entities
 {
     public class CommentEntity :BaseEntity
     {
-        public int? StockId { get; set; }
+        public int StockId { get; set; }
 
         public string Title { get; set; } = string.Empty;
 
         public string Content { get; set; } = string.Empty ;
 
-        public int UserId { get; set; }
+        
 
         // Relations property
-        public StockEntity? Stock { get; set; }
-
-        public UserEntity User { get; set; }
+        public StockEntity Stock { get; set; }
+        //public int UserId { get; set; }
+        //public UserEntity? User { get; set; }
 
     }
 

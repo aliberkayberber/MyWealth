@@ -10,4 +10,12 @@
     <ProjectReference Include="..\MyWealth.Data\MyWealth.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Operations\User\" />
+  </ItemGroup>
+
 </Project>
