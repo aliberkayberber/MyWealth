@@ -33,6 +33,24 @@ namespace MyWealth.WebApi.Controllers
             return Ok(hotel);
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchStock([FromQuery] SearchStockQuery query )
+        {
+            if(string.IsNullOrWhiteSpace(query.CompanyName))
+                return NotFound();
+
+            var searchDto = new SearchDto
+            {
+                CompanyName = query.CompanyName
+            };
+            var stocks = await _stockService.SearchById(searchDto);
+
+            if (stocks is null)
+                return NotFound();
+
+            return Ok(stocks);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddStock(AddStockRequest request)
         {

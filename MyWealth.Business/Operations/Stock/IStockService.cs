@@ -19,5 +19,7 @@ namespace MyWealth.Business.Operations.Stock
         public Task<ServiceMessage> AdJustStockPurchase(int id, decimal changeTo);
 
         public Task<ServiceMessage> DeleteStock(int id);
+
+        public Task<List<StockSearchDto>> SearchById(SearchDto searchDto);
     }
 }
