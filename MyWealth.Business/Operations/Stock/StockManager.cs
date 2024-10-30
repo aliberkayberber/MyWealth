@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MyWealth.Business.Operations.Stock
 {
@@ -172,6 +173,26 @@ namespace MyWealth.Business.Operations.Stock
 
             return stock;
         }
-        
+
+        public async Task<List<StockSearchDto>> SearchById(SearchDto searchDto)
+        {
+            var stocks =  _stockRepository.GetAll(x => x.CompanyName.ToLower().Contains(searchDto.CompanyName.ToLower()))
+                                         .Select(y => new StockSearchDto
+                                         {
+                                             Symbol = y.Symbol,
+                                             CompanyName = y.CompanyName,
+                                             Purchase = y.Purchase,
+                                             MarketCap = y.MarketCap,
+                                             Industry = y.Industry,
+                                             LastDiv = y.LastDiv,
+                                         });
+            var skipNumber = (searchDto.PageNumber - 1) * searchDto.PageSize;
+
+           
+
+            return stocks.Skip(skipNumber).Take(searchDto.PageSize).ToList(); // Pagination
+
+
+        }
     }
 }
