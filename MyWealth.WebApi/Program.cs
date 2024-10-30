@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MyWealth.Business.DataProtection;
 using MyWealth.Business.Operations.Comment;
 using MyWealth.Business.Operations.Stock;
 using MyWealth.Business.Operations.User;
@@ -55,23 +57,16 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStockService, StockManager>();
 
 builder.Services.AddScoped<ICommentService, CommentManager>();
-builder.Services.AddScoped<IAuthService, AuthManager>();
-builder.Services.AddScoped<ITokenService , TokenManager>();
+builder.Services.AddScoped<IDataProtection, DataProtection>();
 
 builder.Services.AddDbContext<MyWealthDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
-    
-
-builder.Services.AddIdentity<AppUser , IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 10;
-})
-    .AddEntityFrameworkStores<MyWealthDbContext>();
+var keysDirectory = new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Keys"));
+builder.Services.AddDataProtection()
+       .SetApplicationName("BookingApp")
+       .PersistKeysToFileSystem(keysDirectory);
 
 
 builder.Services.AddAuthentication(options =>
