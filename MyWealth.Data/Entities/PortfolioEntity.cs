@@ -13,7 +13,7 @@ namespace MyWealth.Data.Entities
 
         public int StockId { get; set; }
 
-        public UserEntity User { get; set; }
+        //public UserEntity User { get; set; }
 
         public StockEntity Stock { get; set; }
     }
