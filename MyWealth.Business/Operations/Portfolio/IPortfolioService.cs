@@ -13,5 +13,11 @@ namespace MyWealth.Business.Operations.Portfolio
         Task<List<PortfolioDto>> GetUserPortfolio(string UserName);
 
         Task<ServiceMessage> AddPortfolio(AddPortfolioDto addPortfolioDto);
+
+        Task<ServiceMessage> DeletePortfolio(DeletePortfolioDto deletePortfolioDto);
+
+        Task<ServiceMessage> PatchPortfolio(PatchPortfolioDto portfolioDto);
+
+        Task<ServiceMessage> UpdatePortfolio(UpdatePortfolioDto portfolioDto);
     }
 }

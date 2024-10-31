@@ -13,7 +13,7 @@ namespace MyWealth.WebApi.Models
         [MinLength(5, ErrorMessage = "Content must be 5 characters")]
         [MaxLength(380, ErrorMessage = "Content cannot be over 280 characters")]
         public string Content { get; set; } = string.Empty;
-
+        [Required]
         public int StockId { get; set; }
     }
 }

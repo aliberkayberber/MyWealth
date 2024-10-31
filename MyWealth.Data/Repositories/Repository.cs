@@ -55,6 +55,10 @@ namespace MyWealth.Data.Repositories
         {
             return predicate is null ? _dbSet : _dbSet.Where(predicate);
         }
+        public List<TEntity> GetAllEntity(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _dbSet.Where(predicate).ToList();
+        }
 
         public List<TEntity> GetAllList()
         {

@@ -23,7 +23,12 @@ namespace MyWealth.Data.Context
 
             modelBuilder.ApplyConfiguration(new PortfolioConfiguration());
 
-            
+            modelBuilder.Entity<SettingEntity>().HasData(
+        new SettingEntity
+         {
+             Id = 1,
+             MaintenanceMode = false
+         });
 
             base.OnModelCreating(modelBuilder);
         }
@@ -36,7 +41,7 @@ namespace MyWealth.Data.Context
 
         public DbSet<PortfolioEntity> Portfolios => Set<PortfolioEntity>();
 
-
+        public DbSet<SettingEntity> Settings => Set<SettingEntity>();
 
     }
 }

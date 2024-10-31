@@ -25,5 +25,7 @@ namespace MyWealth.Data.Repositories
 
         List<TEntity> GetAllList();
 
+        List<TEntity> GetAllEntity(Expression<Func<TEntity, bool>> predicate);
+
     }
 }

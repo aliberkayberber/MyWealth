@@ -51,8 +51,78 @@ namespace MyWealth.WebApi.Controllers
                 return Ok();
 
         }
-        
-       
+
+        // HttpDelete => verilen  stock u siler portfoliodan
+
+        [HttpDelete]
+        public async Task<IActionResult> DeletePortfolio(DeletePortfolioRequest request)
+        {
+            var deleteDto = new DeletePortfolioDto
+            {
+                Username = request.Username,
+                Symbol = request.Symbol,
+            };
+
+            var result = await _portfolioService.DeletePortfolio(deleteDto);
+
+            if(!result.IsSucceed)
+            {
+                return BadRequest(result.Message);
+            }
+            else return Ok();
+
+        }
+
+        // httpPatch => bir stock değiştir
+
+        [HttpPatch]
+        public async Task<IActionResult> PatchPortfolio(PatchPortfolioRequest request)
+        {
+
+            var patchPortfolioDto = new PatchPortfolioDto
+            {
+                Username= request.Username,
+                Changing = request.Changing,
+                ChangeToSymbol= request.ChangeToSymbol,
+            };
+
+            var result = await _portfolioService.PatchPortfolio(patchPortfolioDto);
+
+            if (!result.IsSucceed)
+            {
+                return BadRequest(result.Message);
+            }
+
+            else return Ok();
+
+        }
+
+        // http put => birden fazla stock u ekle ve sil
+        [HttpPut]
+        public async Task<IActionResult> UpdatePortfolio(UpdatePortfolioRequest request)
+        {
+            var updatePortfolioDto = new UpdatePortfolioDto
+            {
+                Username = request.UserName,
+                StockIds = request.StockIds,
+            };
+
+
+            var result = await _portfolioService.UpdatePortfolio(updatePortfolioDto);
+
+            if(!result.IsSucceed)
+            { return BadRequest(result.Message); }
+            else return Ok();
+
+        }
+
+
+
+
+
+
+
+
 
 
     }

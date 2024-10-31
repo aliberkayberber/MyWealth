@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWealth.Business.Operations.Stock;
 using MyWealth.Business.Operations.Stock.Dtos;
+using MyWealth.WebApi.Filters;
 using MyWealth.WebApi.Models;
 
 namespace MyWealth.WebApi.Controllers
@@ -52,6 +54,8 @@ namespace MyWealth.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [TimeControlFilter]
         public async Task<IActionResult> AddStock(AddStockRequest request)
         {
             var addStockDto = new AddStockDto
@@ -87,6 +91,7 @@ namespace MyWealth.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteStock(int id)
         {
             var result = await _stockService.DeleteStock(id);

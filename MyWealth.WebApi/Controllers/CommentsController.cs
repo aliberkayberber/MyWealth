@@ -68,6 +68,8 @@ namespace MyWealth.WebApi.Controllers
 
             return Ok();
         }
+
+        // kullanıcının tüm yorumlarını çek
         
     }
 }

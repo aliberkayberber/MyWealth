@@ -7,12 +7,14 @@ using Microsoft.OpenApi.Models;
 using MyWealth.Business.DataProtection;
 using MyWealth.Business.Operations.Comment;
 using MyWealth.Business.Operations.Portfolio;
+using MyWealth.Business.Operations.Setting;
 using MyWealth.Business.Operations.Stock;
 using MyWealth.Business.Operations.User;
 using MyWealth.Data.Context;
 using MyWealth.Data.Entities;
 using MyWealth.Data.Repositories;
 using MyWealth.Data.UnitOfWork;
+using MyWealth.WebApi.Middlewares;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +64,7 @@ builder.Services.AddScoped<ICommentService, CommentManager>();
 builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<IDataProtection, DataProtection>();
 builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
+builder.Services.AddScoped<ISettingService , SettingManager>();
 
 builder.Services.AddDbContext<MyWealthDbContext>(options =>
 {
@@ -97,6 +100,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMaintenanceMode();
 
 app.UseAuthentication();
 app.UseAuthorization();
