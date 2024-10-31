@@ -48,7 +48,7 @@ namespace MyWealth.Data.Repositories
 
         public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbSet.Find(predicate);
+            return _dbSet.FirstOrDefault(predicate);
         }
 
         public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)

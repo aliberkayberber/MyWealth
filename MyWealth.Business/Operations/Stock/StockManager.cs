@@ -127,7 +127,7 @@ namespace MyWealth.Business.Operations.Stock
 
         public async Task<List<StockDto>> GetAllStock()
         {
-            var hotels =  _stockRepository.GetAll()
+            var stocks =  _stockRepository.GetAll()
                                          .Select(x => new StockDto
                                          {
                                              Id = x.Id,
@@ -145,7 +145,7 @@ namespace MyWealth.Business.Operations.Stock
                                              }).ToList()
                                          }).ToList();
 
-            return hotels;
+            return stocks;
 
             
         }

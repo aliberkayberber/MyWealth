@@ -6,12 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyWealth.Business.DataProtection;
 using MyWealth.Business.Operations.Comment;
+using MyWealth.Business.Operations.Portfolio;
 using MyWealth.Business.Operations.Stock;
 using MyWealth.Business.Operations.User;
 using MyWealth.Data.Context;
 using MyWealth.Data.Entities;
 using MyWealth.Data.Repositories;
 using MyWealth.Data.UnitOfWork;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,31 +24,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSwaggerGen(option =>
+builder.Services.AddSwaggerGen(options =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    var jwtSecurityScheme = new OpenApiSecurityScheme
     {
+        Scheme = "Bearer",
+        BearerFormat = "Jwt",
+        Name = "Jwt Authentication",
         In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
         Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        Description = "Put **_ONLY_** your Jwt Bearer Token on Texbox below!",
+
+        Reference = new OpenApiReference
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme,
         }
+
+    };
+
+    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {jwtSecurityScheme, Array.Empty<string>() },
     });
 });
 
@@ -57,7 +58,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStockService, StockManager>();
 
 builder.Services.AddScoped<ICommentService, CommentManager>();
+
+builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<IDataProtection, DataProtection>();
+builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
 
 builder.Services.AddDbContext<MyWealthDbContext>(options =>
 {
@@ -69,28 +73,20 @@ builder.Services.AddDataProtection()
        .PersistKeysToFileSystem(keysDirectory);
 
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme =
-    options.DefaultChallengeScheme =
-    options.DefaultForbidScheme =
-    options.DefaultScheme =
-    options.DefaultSignInScheme =
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
-        )
-    };
-});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+
+            ValidateIssuer = true, // Issuer validationý yap.
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], // appsettingsteki deðer.
+            ValidateAudience = true, // Audience validationý yap.
+            ValidAudience = builder.Configuration["Jwt:Audience"], // appsettingsteki deðer
+            ValidateLifetime = true, // Geçerlilik zamaný validationý yap.
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)) //  appsettingsteki key.
+        };
+    });
 
 
 var app = builder.Build();

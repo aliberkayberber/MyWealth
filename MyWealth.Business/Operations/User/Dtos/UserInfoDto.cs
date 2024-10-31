@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyWealth.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,14 @@ namespace MyWealth.Business.Operations.User.Dtos
 {
     public class UserInfoDto
     {
-        public string? UserName { get; set; }
+        public int Id { get; set; } 
 
-        public string? Email { get; set; }
+        public string UserName { get; set; }
 
-        public string Token { get; set; }
+        public string Email { get; set; }
+
+        public UserType UserType { get; set; }
+
+        //public string Token { get; set; }
     }
 }
