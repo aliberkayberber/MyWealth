@@ -65,6 +65,7 @@ builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<IDataProtection, DataProtection>();
 builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
 builder.Services.AddScoped<ISettingService , SettingManager>();
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 builder.Services.AddDbContext<MyWealthDbContext>(options =>
 {
@@ -102,6 +103,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMaintenanceMode();
+app.ConfigureExceptionHandlingMiddleware();
 
 app.UseAuthentication();
 app.UseAuthorization();

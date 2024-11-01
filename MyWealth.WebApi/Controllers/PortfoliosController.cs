@@ -25,7 +25,7 @@ namespace MyWealth.WebApi.Controllers
 
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Portfolio not found");
             }
             else
                 return Ok(result);
@@ -115,15 +115,5 @@ namespace MyWealth.WebApi.Controllers
             else return Ok();
 
         }
-
-
-
-
-
-
-
-
-
-
     }
 }

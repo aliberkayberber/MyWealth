@@ -31,7 +31,7 @@ namespace MyWealth.WebApi.Controllers
         { 
             var hotel = await _stockService.GetStock(id);
             if (hotel == null)
-                return NotFound();
+                return NotFound("Not found");
             return Ok(hotel);
         }
 
@@ -48,7 +48,7 @@ namespace MyWealth.WebApi.Controllers
             var stocks = await _stockService.SearchById(searchDto);
 
             if (stocks is null)
-                return NotFound();
+                return NotFound("Not found");
 
             return Ok(stocks);
         }
