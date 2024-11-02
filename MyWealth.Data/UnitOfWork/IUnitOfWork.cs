@@ -8,12 +8,12 @@ namespace MyWealth.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(); // Changes transferred to database
 
-        Task BeginTransaction();
+        Task BeginTransaction(); // begin transaction
 
-        Task CommitTransaction();
+        Task CommitTransaction(); // commit changes to database
 
-        Task RollBackTransaction();
+        Task RollBackTransaction(); // rollback changes
     }
 }

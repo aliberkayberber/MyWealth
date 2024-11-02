@@ -26,6 +26,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Settings to authorize via swagger
 builder.Services.AddSwaggerGen(options =>
 {
     var jwtSecurityScheme = new OpenApiSecurityScheme
@@ -53,30 +54,32 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // generic olduðu için typeof kullandýk
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // We used typeof because it is generic.
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+//We determine the service life time and introduce that we will produce the manager produced from the interface.
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 builder.Services.AddScoped<IStockService, StockManager>();
-
 builder.Services.AddScoped<ICommentService, CommentManager>();
-
 builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<IDataProtection, DataProtection>();
 builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
 builder.Services.AddScoped<ISettingService , SettingManager>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 
+// We introduce the database
 builder.Services.AddDbContext<MyWealthDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
+
+//for the method we use the user's password.
 var keysDirectory = new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Keys"));
 builder.Services.AddDataProtection()
        .SetApplicationName("BookingApp")
        .PersistKeysToFileSystem(keysDirectory);
 
 
+// jwt options
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
 
@@ -102,8 +105,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMaintenanceMode();
-app.ConfigureExceptionHandlingMiddleware();
+app.UseMaintenanceMode(); // maintenance mode 
+app.ConfigureExceptionHandlingMiddleware(); // global exception handler
 
 app.UseAuthentication();
 app.UseAuthorization();

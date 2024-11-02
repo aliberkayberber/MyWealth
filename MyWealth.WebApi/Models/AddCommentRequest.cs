@@ -15,5 +15,8 @@ namespace MyWealth.WebApi.Models
         public string Content { get; set; } = string.Empty;
         [Required]
         public int StockId { get; set; }
+
+        [Required]
+        public int UserId { get; set; }
     }
 }

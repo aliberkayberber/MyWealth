@@ -7,9 +7,11 @@ namespace MyWealth.WebApi.Jwt
 {
     public static class JwtHelper
     {
+        // jwt token operations
         public static string GenerateJwtToken(JwtDto jwtInfo)
         {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtInfo.SecretKey));
+            // use secret key
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtInfo.SecretKey)); 
 
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
@@ -23,9 +25,6 @@ namespace MyWealth.WebApi.Jwt
                             new Claim(ClaimTypes.Role , jwtInfo.UserType.ToString())
 
                         };
-
-
-
 
             var expireTime = DateTime.Now.AddMinutes(jwtInfo.ExpireMinutes);
 

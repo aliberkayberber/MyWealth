@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyWealth.Business.Operations.Comment.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace MyWealth.Business.Operations.Portfolio.Dtos
         public string Industry { get; set; }
         public long MarketCap {  get; set; }
         public decimal LastDiv { get; set; }
+
+        public List<CommentDto> Comments { get; set; }
     }
 }

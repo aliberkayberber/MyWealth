@@ -9,13 +9,13 @@ namespace MyWealth.Data.Entities
 {
     public class PortfolioEntity : BaseEntity
     {
-        public int UserId { get; set; }
+        public int UserId { get; set; } // portfolio owner user id
 
-        public int StockId { get; set; }
+        public int StockId { get; set; } // portfolio stocks id
 
-        public UserEntity User { get; set; }
+        public UserEntity User { get; set; } // portfolio owner user
 
-        public StockEntity Stock { get; set; }
+        public StockEntity Stock { get; set; } // portfolio stocks
     }
 
     public class PortfolioConfiguration: BaseConfiguration<PortfolioEntity>

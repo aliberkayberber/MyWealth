@@ -20,6 +20,7 @@ namespace MyWealth.WebApi.Middlewares
 
             bool mainteneneceMode = settingService.GetMaintenanceState();
 
+            // Login and maintenance mode without blocks all operations.
             if (context.Request.Path.StartsWithSegments("/api/auth/login") || context.Request.Path.StartsWithSegments("/api/settings"))
             {
                 await _next(context);

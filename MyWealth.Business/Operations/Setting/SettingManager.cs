@@ -11,15 +11,17 @@ namespace MyWealth.Business.Operations.Setting
 {
     public class SettingManager : ISettingService
     {
-        private readonly IRepository<SettingEntity> _settingRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<SettingEntity> _settingRepository; // for maintenance operations
+        private readonly IUnitOfWork _unitOfWork; // for database operations
 
+        // we do dependency injection.
         public SettingManager(IUnitOfWork unitOfWork, IRepository<SettingEntity> settingRepository)
         {
             _unitOfWork = unitOfWork;
             _settingRepository = settingRepository;
         }
 
+        // To find out the situation
         public bool GetMaintenanceState()
         {
             var maintenanceState = _settingRepository.GetById(1).MaintenanceMode;
@@ -27,6 +29,7 @@ namespace MyWealth.Business.Operations.Setting
             return maintenanceState;
         }
 
+        //Used to put into maintenance mode
         public async Task ToggleMaintenence()
         {
             var setting = _settingRepository.GetById(1);
@@ -36,15 +39,12 @@ namespace MyWealth.Business.Operations.Setting
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();  // Setting are saved to database
             }
             catch (Exception)
             {
-                throw new Exception("Bakım durumu güncellenirken bir hata ile karşılaşıldı");
+                throw new Exception("An error was encountered while updating the maintenance status");
             }
-
-
-
 
         }
     }

@@ -18,11 +18,13 @@ namespace MyWealth.Data.UnitOfWork
             _db = db;
         }
 
+        // begin transaction
         public async Task BeginTransaction()
         {
             _transaction = await _db.Database.BeginTransactionAsync();
         }
 
+        // commit changes to databa
         public async Task CommitTransaction()
         {
             await _transaction.CommitAsync();
@@ -40,11 +42,13 @@ namespace MyWealth.Data.UnitOfWork
             // Bu kodlar GC yi direkt çalıştırır
         }
 
+        // rollback changes
         public async Task RollBackTransaction()
         {
             await _transaction.RollbackAsync();
         }
 
+        // Changes transferred to database
         public async Task<int> SaveChangesAsync()
         {
             return await _db.SaveChangesAsync();

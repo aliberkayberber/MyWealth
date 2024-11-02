@@ -24,11 +24,11 @@ namespace MyWealth.Data.Migrations
 
             modelBuilder.Entity("MyWealth.Data.Entities.CommentEntity", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -43,15 +43,12 @@ namespace MyWealth.Data.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StockId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "StockId");
 
                     b.HasIndex("StockId");
 
@@ -110,7 +107,7 @@ namespace MyWealth.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2024, 10, 31, 23, 49, 15, 811, DateTimeKind.Local).AddTicks(5474),
+                            CreatedDate = new DateTime(2024, 11, 1, 20, 8, 5, 296, DateTimeKind.Local).AddTicks(8615),
                             IsDeleted = false,
                             MaintenanceMode = false
                         });
@@ -204,7 +201,15 @@ namespace MyWealth.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyWealth.Data.Entities.UserEntity", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Stock");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyWealth.Data.Entities.PortfolioEntity", b =>
@@ -235,6 +240,8 @@ namespace MyWealth.Data.Migrations
 
             modelBuilder.Entity("MyWealth.Data.Entities.UserEntity", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Portfolios");
                 });
 #pragma warning restore 612, 618

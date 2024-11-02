@@ -9,7 +9,7 @@ namespace MyWealth.Business.Operations.Setting
 {
     public interface ISettingService
     {
-        Task ToggleMaintenence();
-        bool GetMaintenanceState();
+        Task ToggleMaintenence(); //Used to put into maintenance mode
+        bool GetMaintenanceState(); // To find out the situation
     }
 }

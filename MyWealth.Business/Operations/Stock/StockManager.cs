@@ -17,10 +17,12 @@ namespace MyWealth.Business.Operations.Stock
 {
     public class StockManager : IStockService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<StockEntity> _stockRepository;
-        private readonly IRepository<PortfolioEntity> _portfolioRepository;
-        private IRepository<CommentEntity> _commentRepository;
+        private readonly IUnitOfWork _unitOfWork; // for database operations
+        private readonly IRepository<StockEntity> _stockRepository; // for stock operations
+        private readonly IRepository<PortfolioEntity> _portfolioRepository; // for portfolio operations
+        private IRepository<CommentEntity> _commentRepository; //// for comment operations
+
+        // we do dependency injection.
         public StockManager(IUnitOfWork unitOfWork, IRepository<StockEntity> stockRepository, IRepository<PortfolioEntity> portfolioRepository, IRepository<CommentEntity> commentRepository)
         {
             _unitOfWork = unitOfWork;
@@ -29,9 +31,10 @@ namespace MyWealth.Business.Operations.Stock
             _commentRepository = commentRepository;
         }
 
+        // adds new stocks
         public async Task<ServiceMessage> AddStock(AddStockDto stock)
         {
-            var hasStock = _stockRepository.GetAll(x => x.Symbol.ToLower()  == stock.Symbol.ToLower()).Any();
+            var hasStock = _stockRepository.GetAll(x => x.Symbol.ToLower()  == stock.Symbol.ToLower()).Any(); // stock checking
 
 
             if (hasStock)
@@ -54,8 +57,8 @@ namespace MyWealth.Business.Operations.Stock
 
             };
 
-            _stockRepository.Add(stockEntity);
-            await _unitOfWork.SaveChangesAsync();
+            _stockRepository.Add(stockEntity); // adding stock
+            await _unitOfWork.SaveChangesAsync(); // stock are saved to database
 
             return new ServiceMessage
             {
@@ -64,9 +67,10 @@ namespace MyWealth.Business.Operations.Stock
 
         }
 
+        // purchase changing
         public async Task<ServiceMessage> AdJustStockPurchase(int id, decimal changeTo)
         {
-            var stock = _stockRepository.GetById(id);
+            var stock = _stockRepository.GetById(id); // stock checking
 
             if (stock is null)
             {
@@ -77,11 +81,11 @@ namespace MyWealth.Business.Operations.Stock
                 };
             }
 
-            stock.Purchase = changeTo;
-            _stockRepository.Update(stock);
+            stock.Purchase = changeTo; // changing purchase
+            _stockRepository.Update(stock);// update stock
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // stock are saved to database
             }
             catch (Exception)
             {
@@ -93,9 +97,10 @@ namespace MyWealth.Business.Operations.Stock
             };
         }
 
+        // delete stock
         public async Task<ServiceMessage> DeleteStock(int id)
         {
-            var stock = _stockRepository.GetById(id);
+            var stock = _stockRepository.GetById(id); // stock checking
 
             if(stock is null)
             {
@@ -108,11 +113,11 @@ namespace MyWealth.Business.Operations.Stock
 
             
 
-            _stockRepository.Delete(id);
+            _stockRepository.Delete(id); // delete stock
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // Changes transferred to database
             }
             catch (Exception)
             {
@@ -125,8 +130,11 @@ namespace MyWealth.Business.Operations.Stock
             };
         }
 
-        public async Task<List<StockDto>> GetAllStock()
+        // shows all stocks by pagination
+        public async Task<List<StockDto>> GetAllStock(int pagenumber, int pagesize)
         {
+
+            // The features of the stocks and comments about the stock are received.
             var stocks =  _stockRepository.GetAll()
                                          .Select(x => new StockDto
                                          {
@@ -145,14 +153,14 @@ namespace MyWealth.Business.Operations.Stock
                                              }).ToList()
                                          }).ToList();
 
-            return stocks;
+            var skipNumber = (pagenumber - 1) * pagesize; // for pagination
 
-            
+            return stocks.Skip(skipNumber).Take(pagesize).ToList(); 
         }
-        
+        // shows stock 
         public async Task<StockDto> GetStock(int id)
         {
-            
+            // The features of the stock and comments about the stock are received.
             var stock =  _stockRepository.GetAll(x => x.Id == id)
                                          .Select(x => new StockDto
                                          {
@@ -174,8 +182,10 @@ namespace MyWealth.Business.Operations.Stock
             return stock;
         }
 
+        // search stock by id
         public async Task<List<StockSearchDto>> SearchById(SearchDto searchDto)
         {
+            // The features of the stock and comments about the stock are received.
             var stocks =  _stockRepository.GetAll(x => x.CompanyName.ToLower().Contains(searchDto.CompanyName.ToLower()))
                                          .Select(y => new StockSearchDto
                                          {

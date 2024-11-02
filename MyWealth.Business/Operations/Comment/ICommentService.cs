@@ -10,12 +10,12 @@ namespace MyWealth.Business.Operations.Comment
 {
     public interface ICommentService
     {
-        public Task<ServiceMessage> AddComment(CommentDto commentDto);
+        public Task<ServiceMessage> AddComment(CommentDto commentDto); // to write a new comment
 
-        public Task<List<GetCommentDto>> GetAllComments();
+        public Task<List<AllCommentDto>> GetAllComments(StockGetAllCommentDto stockGetAllComment); // To pull all comments from the user
 
-        public Task<ServiceMessage> UpdateComment(int id, string updatedText);
+        public Task<ServiceMessage> UpdateComment(int id, string updatedText); // to update comment
 
-        public Task<ServiceMessage> DeleteComment(int id);
+        public Task<ServiceMessage> DeleteComment(int id); // to delete comment
     }
 }

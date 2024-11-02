@@ -14,10 +14,10 @@ namespace MyWealth.Business.Operations.Portfolio
 {
     public class PortfolioManager : IPortfolioService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<StockEntity> _stockRepository;
-        private readonly IRepository<UserEntity> _userRepository;
-        private readonly IRepository<PortfolioEntity> _portfolioRepository;
+        private readonly IUnitOfWork _unitOfWork; // for database operations
+        private readonly IRepository<StockEntity> _stockRepository; // for stock operations
+        private readonly IRepository<UserEntity> _userRepository; // for user operations
+        private readonly IRepository<PortfolioEntity> _portfolioRepository; // for portfolio operations
 
         public PortfolioManager(IUnitOfWork unitOfWork, IRepository<StockEntity> stockRepository, IRepository<UserEntity> userRepository, IRepository<PortfolioEntity> portfolioRepository)
         {
@@ -27,9 +27,10 @@ namespace MyWealth.Business.Operations.Portfolio
             _portfolioRepository = portfolioRepository;
         }
 
+        // we do dependency injection.
         public async Task<ServiceMessage> AddPortfolio(AddPortfolioDto addPortfolioDto)
         {
-            var user = _userRepository.Get(x => x.UserName.ToLower() == addPortfolioDto.Username.ToLower());
+            var user = _userRepository.Get(x => x.UserName.ToLower() == addPortfolioDto.Username.ToLower()); // user checking
 
             if (user is null)
             {
@@ -40,9 +41,9 @@ namespace MyWealth.Business.Operations.Portfolio
                 };
             }
 
-            await _unitOfWork.BeginTransaction();
+            await _unitOfWork.BeginTransaction(); 
 
-            var stock = _stockRepository.Get(x => x.Symbol.ToLower() == addPortfolioDto.Symbol.ToLower());
+            var stock = _stockRepository.Get(x => x.Symbol.ToLower() == addPortfolioDto.Symbol.ToLower()); // stock checking
 
             var portfolio = new PortfolioEntity
             {
@@ -50,16 +51,17 @@ namespace MyWealth.Business.Operations.Portfolio
                 UserId = user.Id,
             };
 
-             _portfolioRepository.Add(portfolio);
+
+            _portfolioRepository.Add(portfolio); 
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.CommitTransaction();
+                await _unitOfWork.SaveChangesAsync(); // portfolio are saved to database
+                await _unitOfWork.CommitTransaction(); // portfolio are commited to database
             }
             catch (Exception)
             {
-                await _unitOfWork.RollBackTransaction();
+                await _unitOfWork.RollBackTransaction(); 
                 throw new Exception("An error occurred");
             }
             return new ServiceMessage
@@ -69,9 +71,11 @@ namespace MyWealth.Business.Operations.Portfolio
 
         }
 
+        // deletes a stock from the user's portfolio
         public async Task<ServiceMessage> DeletePortfolio(DeletePortfolioDto deletePortfolio)
         {
-            var user = _userRepository.Get(x => x.UserName.ToLower() == deletePortfolio.Username.ToLower());
+            var user = _userRepository.Get(x => x.UserName.ToLower() == deletePortfolio.Username.ToLower()); // user checking
+
 
 
             if (user is null)
@@ -82,10 +86,19 @@ namespace MyWealth.Business.Operations.Portfolio
                     Message = "User not found"
                 };
             }
-            var stock = _stockRepository.Get(x => x.Symbol.ToLower() == deletePortfolio.Symbol.ToLower());
 
+            var stock = _stockRepository.Get(x => x.Symbol.ToLower() == deletePortfolio.Symbol.ToLower()); // stock checking
 
+            if (stock is null)
+            {
+                return new ServiceMessage
+                {
+                    IsSucceed = false,
+                    Message = "Stock not found"
+                };
+            }
 
+            // portfolio checking
             var portfolio = _portfolioRepository.Get(x => x.StockId == stock.Id && x.UserId == user.Id);
 
             if (portfolio is null)
@@ -96,11 +109,12 @@ namespace MyWealth.Business.Operations.Portfolio
                     Message = "Portfolio not found"
                 };
             }
-            _portfolioRepository.Delete(portfolio,false);
+
+            _portfolioRepository.Delete(portfolio,false); //stocks are deleted from portfolio
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // changes are transferred to the database
             }
             catch(Exception)
             {
@@ -114,8 +128,10 @@ namespace MyWealth.Business.Operations.Portfolio
 
         }
 
+        // swaps one stock from the user's portfolio for another
         public async Task<ServiceMessage> PatchPortfolio(PatchPortfolioDto portfolioDto)
         {
+            // user checking
             var user = _userRepository.Get(x => x.UserName.ToLower() == portfolioDto.Username.ToLower());
 
             if (user is null)
@@ -126,7 +142,7 @@ namespace MyWealth.Business.Operations.Portfolio
                     Message = "User not found"
                 };
             }
-
+            // 
             var changingStock = _stockRepository.Get(x => x.Symbol.ToLower() == portfolioDto.Changing.ToLower()); // Share to be exchanged
 
             if(changingStock is null)
@@ -138,7 +154,7 @@ namespace MyWealth.Business.Operations.Portfolio
                 };
             }
 
-            var changeToStock = _stockRepository.Get(x => x.Symbol.ToLower() == portfolioDto.ChangeToSymbol.ToLower());
+            var changeToStock = _stockRepository.Get(x => x.Symbol.ToLower() == portfolioDto.ChangeToSymbol.ToLower()); // desired stock
 
             if (changeToStock is null)
             {
@@ -149,7 +165,7 @@ namespace MyWealth.Business.Operations.Portfolio
                 };
             }
 
-            var portfolio = _portfolioRepository.Get(x => x.StockId == changingStock.Id && x.UserId == user.Id);
+            var portfolio = _portfolioRepository.Get(x => x.StockId == changingStock.Id && x.UserId == user.Id); // porfolio checking
 
             if (portfolio is null)
             {
@@ -164,31 +180,31 @@ namespace MyWealth.Business.Operations.Portfolio
 
             
 
-            _portfolioRepository.Delete(portfolio, false);
-            
+            _portfolioRepository.Delete(portfolio, false); // old stocks were removed from the portfolio
+
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // changes are transferred to the database
             }
             catch (Exception)
             {
 
                 throw new Exception("An error occurred when delete");
             }
-
+            // 
             var newPortfolio = new PortfolioEntity
             {
                 StockId = changeToStock.Id,
                 UserId = user.Id,
             };
 
-            _portfolioRepository.Add(newPortfolio);
+            _portfolioRepository.Add(newPortfolio); // new stocks are added to the portfolio
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
-                 await _unitOfWork.CommitTransaction();
+                await _unitOfWork.SaveChangesAsync(); // changes are transferred to the database
+                await _unitOfWork.CommitTransaction(); // commit changes
             }
             catch(Exception)
             {
@@ -202,11 +218,12 @@ namespace MyWealth.Business.Operations.Portfolio
         }
 
 
-
+        // pulls user's portfolio
         public async Task<List<PortfolioDto>> GetUserPortfolio(string UserName)
         {
-            var user =  _userRepository.Get(x => x.UserName.ToLower() == UserName.ToLower());
+            var user =  _userRepository.Get(x => x.UserName.ToLower() == UserName.ToLower()); // user checking
 
+            // We pull all stocks in the user's portfolio
             var portfolio = await _userRepository.GetAll(x => x.Id == user.Id).Select(u => new PortfolioDto
             {
                 Username = user.UserName,
@@ -228,9 +245,10 @@ namespace MyWealth.Business.Operations.Portfolio
             
         }
 
+        // Deletes all stocks from the user's portfolio and replaces them with all the given stocks
         public async Task<ServiceMessage> UpdatePortfolio(UpdatePortfolioDto portfolioDto)
         {
-            var user = _userRepository.Get(x => x.UserName.ToLower() == portfolioDto.Username.ToLower());
+            var user = _userRepository.Get(x => x.UserName.ToLower() == portfolioDto.Username.ToLower()); // user checking
 
             if (user is null)
             {
@@ -241,7 +259,7 @@ namespace MyWealth.Business.Operations.Portfolio
                 };
             }
 
-            var portfolio = _portfolioRepository.GetAll(x => x.UserId == user.Id).ToList();
+            var portfolio = _portfolioRepository.GetAll(x => x.UserId == user.Id).ToList(); // portfolio checking
 
             if (portfolio is null)
             {
@@ -254,6 +272,7 @@ namespace MyWealth.Business.Operations.Portfolio
 
              await _unitOfWork.BeginTransaction();
 
+            // We delete all stocks in the user's portfolio
             foreach (var item in portfolio)
             {
                 _portfolioRepository.Delete(item, false);
@@ -262,7 +281,7 @@ namespace MyWealth.Business.Operations.Portfolio
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // changes are transferred to the database
             }
             catch (Exception )
             {
@@ -278,13 +297,13 @@ namespace MyWealth.Business.Operations.Portfolio
                     StockId = stockId,
                 };
 
-                _portfolioRepository.Add(newPortfolio);
+                _portfolioRepository.Add(newPortfolio); // new stocks are added to the user's portfolio
             }
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.CommitTransaction();
+                await _unitOfWork.SaveChangesAsync(); // changes are transferred to the database
+                await _unitOfWork.CommitTransaction(); // commit changes
             }
             catch(Exception)
             {

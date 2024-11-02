@@ -8,6 +8,7 @@ namespace MyWealth.WebApi.Middlewares
 {
     public class ExceptionMiddleware : IMiddleware
     {
+        // global exception handler operations
         public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
             try
@@ -22,8 +23,8 @@ namespace MyWealth.WebApi.Middlewares
 
         private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
-            int statusCode = GetStatusCode(exception);
-            httpContext.Response.ContentType = MediaTypeNames.Application.Json;
+            int statusCode = GetStatusCode(exception); 
+            httpContext.Response.ContentType = MediaTypeNames.Application.Json; // response type json
             httpContext.Response.StatusCode = statusCode;
             List<string> errors = new()
             {

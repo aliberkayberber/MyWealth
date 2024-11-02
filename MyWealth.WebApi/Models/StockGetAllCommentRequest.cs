@@ -2,12 +2,13 @@
 
 namespace MyWealth.WebApi.Models
 {
-    public class SearchStockQuery
+    public class StockGetAllCommentRequest
     {
-        [MinLength(3, ErrorMessage = "Title must be 3 characters")]
-        public string? CompanyName { get; set; }
-
+        [Required]
+        public int UserId { get; set; }
+        [Required]
         public int PageNumber { get; set; } = 1;
+        [Required]
         public int PageSize { get; set; } = 10;
     }
 }

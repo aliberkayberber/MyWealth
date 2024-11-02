@@ -17,15 +17,16 @@ namespace MyWealth.Data.Repositories
 
         void Update(TEntity entity); // for db update operations
 
-        TEntity GetById(int id); // 
+        TEntity GetById(int id); // checking entity by id
 
-        TEntity Get(Expression<Func<TEntity, bool>> predicate);
+        TEntity Get(Expression<Func<TEntity, bool>> predicate); // checking entity by linq Expression
 
-        IQueryable<TEntity> GetAll(Expression<Func<TEntity,bool >> predicate = null);
+        IQueryable<TEntity> GetAll(Expression<Func<TEntity,bool >> predicate = null); // checking entitys by linq Expression or checking all entity
 
-        List<TEntity> GetAllList();
+        //List<TEntity> GetAllList();
 
-        List<TEntity> GetAllEntity(Expression<Func<TEntity, bool>> predicate);
+        //List<TEntity> GetAllEntity(Expression<Func<TEntity, bool>> predicate);
+
 
     }
 }

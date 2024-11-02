@@ -17,12 +17,12 @@ namespace MyWealth.Business.DataProtection
         }
         public string Protect(string text)
         {
-            return _protection.Protect(text);
+            return _protection.Protect(text); //for password Encrypt
         }
 
         public string UnProtect(string ProtectedText)
         {
-            return _protection.Unprotect(ProtectedText);
+            return _protection.Unprotect(ProtectedText); // to unlock the password
         }
     }
 }

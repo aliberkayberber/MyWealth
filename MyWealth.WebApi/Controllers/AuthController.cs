@@ -12,13 +12,13 @@ namespace MyWealth.WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-
+        // dependency injection for user processes
         public AuthController(IUserService userService)
         {
             _userService = userService;
         }
 
-
+        // register operations
         [HttpPost("register")]
         public async Task<IActionResult> Regtister(RegisterRequest request)
         {
@@ -27,16 +27,18 @@ namespace MyWealth.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var registerDto = new RegisterDto
+            // To comply with the single responsibility principle, data is transferred via dto
+            var registerDto = new RegisterDto 
             {
                 Email = request.Email,
                 UserName = request.UserName,
                 Password = request.Password,
             };
 
-            var result = await _userService.Register(registerDto);
+            // Checking the result
+            var result = await _userService.Register(registerDto); 
 
-            if(result.IsSucceed)
+            if (result.IsSucceed)
             {
                 return Ok();
             }
@@ -44,6 +46,7 @@ namespace MyWealth.WebApi.Controllers
 
         }
 
+        // Login operations
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
@@ -52,13 +55,14 @@ namespace MyWealth.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            // To comply with the single responsibility principle, data is transferred via dto
             var loginDto = new LoginDto
             {
                 Email = request.Email,
                 Password = request.Password,
             };
 
-
+            // Checking the result
             var result =  _userService.Login(loginDto);
 
             if (!result.IsSucceed)
@@ -66,7 +70,7 @@ namespace MyWealth.WebApi.Controllers
                 return BadRequest(result.Message);
             }
 
-            // jwt
+            // jwt operations
             var user = result.Data;
 
             var configuration = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
@@ -85,7 +89,7 @@ namespace MyWealth.WebApi.Controllers
 
             return Ok(new LoginResponse
             {
-                Message = "Giriş Başarılı ile tamalandı",
+                Message = "Login completed successfully",
                 Token = token,
             });
 

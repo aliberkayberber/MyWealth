@@ -8,6 +8,6 @@ namespace MyWealth.Data.Entities
 {
     public class SettingEntity : BaseEntity
     {
-        public bool MaintenanceMode { get; set; }
+        public bool MaintenanceMode { get; set; } // maintenance mode
     }
 }

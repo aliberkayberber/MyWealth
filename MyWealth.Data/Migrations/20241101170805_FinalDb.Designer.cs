@@ -12,8 +12,8 @@ using MyWealth.Data.Context;
 namespace MyWealth.Data.Migrations
 {
     [DbContext(typeof(MyWealthDbContext))]
-    [Migration("20241030151004_newData")]
-    partial class newData
+    [Migration("20241101170805_FinalDb")]
+    partial class FinalDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace MyWealth.Data.Migrations
 
             modelBuilder.Entity("MyWealth.Data.Entities.CommentEntity", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -46,22 +46,14 @@ namespace MyWealth.Data.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StockId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int?>("UserEntityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "StockId");
 
                     b.HasIndex("StockId");
-
-                    b.HasIndex("UserEntityId");
 
                     b.ToTable("Comments");
                 });
@@ -88,6 +80,40 @@ namespace MyWealth.Data.Migrations
                     b.HasIndex("StockId");
 
                     b.ToTable("Portfolios");
+                });
+
+            modelBuilder.Entity("MyWealth.Data.Entities.SettingEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("MaintenanceMode")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2024, 11, 1, 20, 8, 5, 296, DateTimeKind.Local).AddTicks(8615),
+                            IsDeleted = false,
+                            MaintenanceMode = false
+                        });
                 });
 
             modelBuilder.Entity("MyWealth.Data.Entities.StockEntity", b =>
@@ -141,9 +167,6 @@ namespace MyWealth.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -163,8 +186,7 @@ namespace MyWealth.Data.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserType")
                         .HasColumnType("int");
@@ -182,23 +204,27 @@ namespace MyWealth.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWealth.Data.Entities.UserEntity", null)
+                    b.HasOne("MyWealth.Data.Entities.UserEntity", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserEntityId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Stock");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyWealth.Data.Entities.PortfolioEntity", b =>
                 {
                     b.HasOne("MyWealth.Data.Entities.StockEntity", "Stock")
-                        .WithMany("Portfolio")
+                        .WithMany("Portfolios")
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MyWealth.Data.Entities.UserEntity", "User")
-                        .WithMany("Portfolio")
+                        .WithMany("Portfolios")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -212,14 +238,14 @@ namespace MyWealth.Data.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Portfolio");
+                    b.Navigation("Portfolios");
                 });
 
             modelBuilder.Entity("MyWealth.Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Portfolio");
+                    b.Navigation("Portfolios");
                 });
 #pragma warning restore 612, 618
         }

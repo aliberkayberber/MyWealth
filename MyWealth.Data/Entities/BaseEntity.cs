@@ -26,7 +26,7 @@ namespace MyWealth.Data.Entities
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            builder.HasQueryFilter(x => x.IsDeleted == false);
+            builder.HasQueryFilter(x => x.IsDeleted == false); // Soft deleted objects are not visible
 
             builder.Property(x => x.ModifiedDate).IsRequired(false);
         }

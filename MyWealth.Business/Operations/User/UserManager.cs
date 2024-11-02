@@ -15,10 +15,11 @@ namespace MyWealth.Business.Operations.User
 {
     public class UserManager : IUserService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<UserEntity> _userRepository;
-        private readonly IDataProtection _dataProtection;
+        private readonly IUnitOfWork _unitOfWork; // for database operations
+        private readonly IRepository<UserEntity> _userRepository; // for user operations
+        private readonly IDataProtection _dataProtection; // for data protection operations
 
+        // we do dependency injection.
         public UserManager(IUnitOfWork unitOfWork, IRepository<UserEntity> userRepository, IDataProtection dataProtection)
         {
             _unitOfWork = unitOfWork;
@@ -26,9 +27,10 @@ namespace MyWealth.Business.Operations.User
             _dataProtection = dataProtection;
         }
 
+        // for login
         public ServiceMessage<UserInfoDto> Login(LoginDto user)
         {
-            var userEntity = _userRepository.Get(x => x.Email.ToLower() == user.Email.ToLower());
+            var userEntity = _userRepository.Get(x => x.Email.ToLower() == user.Email.ToLower()); // user email checking 
 
             if (userEntity is null)
             {
@@ -39,9 +41,9 @@ namespace MyWealth.Business.Operations.User
                 };
             }
 
-            var unproctectPassword = _dataProtection.UnProtect(userEntity.Password);
+            var unproctectPassword = _dataProtection.UnProtect(userEntity.Password); 
 
-            if (unproctectPassword == user.Password)
+            if (unproctectPassword == user.Password) // succesfuly login
             {
                 return new ServiceMessage<UserInfoDto>
                 {
@@ -67,15 +69,16 @@ namespace MyWealth.Business.Operations.User
 
         }
 
+        // for register
         public async Task<ServiceMessage> Register(RegisterDto user)
         {
-            var hasMail = _userRepository.GetAll(x => x.Email.ToLower() == user.Email.ToLower());
+            var hasMail = _userRepository.GetAll(x => x.Email.ToLower() == user.Email.ToLower()); // user email checking
 
             if(hasMail.Any())
             {
                 return new ServiceMessage
                 {
-                    IsSucceed = true,
+                    IsSucceed = false,
                     Message = "Email already exist"
                 };
             }
@@ -89,11 +92,11 @@ namespace MyWealth.Business.Operations.User
                 UserType = UserType.User,
             };
 
-            _userRepository.Add(userEntity);
+            _userRepository.Add(userEntity); // user added
 
             try
             {
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); // Changes transferred to database
             }
             catch (Exception)
             {

@@ -9,14 +9,16 @@ namespace MyWealth.Data.Entities
 {
     public class UserEntity : BaseEntity
     {
-        public string Email { get; set; }
+        public string Email { get; set; } // user email
 
-        public string Password { get; set; }
+        public string Password { get; set; } // user password
 
-        public string UserName { get; set; }
+        public string UserName { get; set; } // user username
 
-        public UserType UserType { get; set; }
+        public UserType UserType { get; set; } // user type 
 
         public List<PortfolioEntity> Portfolios { get; set; }
+
+        public List<CommentEntity> Comments { get; set; }
     }
 }

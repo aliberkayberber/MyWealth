@@ -10,16 +10,16 @@ namespace MyWealth.Business.Operations.Stock
 {
     public interface IStockService
     {
-        public Task<List<StockDto>> GetAllStock();
+        public Task<List<StockDto>> GetAllStock(int pagenumber,int pagesize); // shows all stocks by pagination
 
-        public Task<StockDto> GetStock(int id);
+        public Task<StockDto> GetStock(int id); // shows stock 
 
-        public Task<ServiceMessage> AddStock(AddStockDto stock);
+        public Task<ServiceMessage> AddStock(AddStockDto stock); // adds new stocks
 
-        public Task<ServiceMessage> AdJustStockPurchase(int id, decimal changeTo);
+        public Task<ServiceMessage> AdJustStockPurchase(int id, decimal changeTo); // purchase changing
 
-        public Task<ServiceMessage> DeleteStock(int id);
+        public Task<ServiceMessage> DeleteStock(int id); // delete stock by id
 
-        public Task<List<StockSearchDto>> SearchById(SearchDto searchDto);
+        public Task<List<StockSearchDto>> SearchById(SearchDto searchDto); // search stock by id
     }
 }

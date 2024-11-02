@@ -10,8 +10,8 @@ namespace MyWealth.Business.Operations.User
 {
     public interface IUserService
     {
-        Task<ServiceMessage> Register(RegisterDto registerDto);
+        Task<ServiceMessage> Register(RegisterDto registerDto); // for register
 
-        ServiceMessage<UserInfoDto> Login(LoginDto user);
+        ServiceMessage<UserInfoDto> Login(LoginDto user); // for login
     }
 }

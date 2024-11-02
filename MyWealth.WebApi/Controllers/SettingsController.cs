@@ -10,16 +10,18 @@ namespace MyWealth.WebApi.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly ISettingService _settingService;
-
+        // dependency injection for portfolio processes
         public SettingsController(ISettingService settingService)
         {
             _settingService = settingService;
         }
 
+        // put into maintenance mode
         [HttpPatch]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ToogleMaintenence()
         {
+            // It is sent to the setting service for the transactions to be carried out.
             await _settingService.ToggleMaintenence();
 
             return Ok();

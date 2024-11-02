@@ -10,19 +10,19 @@ namespace MyWealth.Data.Entities
 {
     public class StockEntity : BaseEntity
     {
-        public string Symbol { get; set; } = string.Empty;
+        public string Symbol { get; set; } = string.Empty; // stock symbol
 
-        public string CompanyName { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;  // stock CompanyName
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Purchase { get; set; }
+        public decimal Purchase { get; set; } // stock Purchase
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal LastDiv { get; set; } // Divdend
 
-        public string Industry { get; set; } = string.Empty;
+        public string Industry { get; set; } = string.Empty; // stock Industry
 
-        public long MarketCap { get; set; }
+        public long MarketCap { get; set; } // stock MarketCap
 
         // Relations property
 

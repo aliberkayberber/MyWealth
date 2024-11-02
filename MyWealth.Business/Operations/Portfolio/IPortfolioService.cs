@@ -10,14 +10,14 @@ namespace MyWealth.Business.Operations.Portfolio
 {
     public interface IPortfolioService
     {
-        Task<List<PortfolioDto>> GetUserPortfolio(string UserName);
+        Task<List<PortfolioDto>> GetUserPortfolio(string UserName); // pulls user's portfolio
 
-        Task<ServiceMessage> AddPortfolio(AddPortfolioDto addPortfolioDto);
+        Task<ServiceMessage> AddPortfolio(AddPortfolioDto addPortfolioDto); // adds new stocks to the user's portfolio
 
-        Task<ServiceMessage> DeletePortfolio(DeletePortfolioDto deletePortfolioDto);
+        Task<ServiceMessage> DeletePortfolio(DeletePortfolioDto deletePortfolioDto);  // deletes a stock from the user's portfolio
 
-        Task<ServiceMessage> PatchPortfolio(PatchPortfolioDto portfolioDto);
+        Task<ServiceMessage> PatchPortfolio(PatchPortfolioDto portfolioDto);  // swaps one stock from the user's portfolio for another
 
-        Task<ServiceMessage> UpdatePortfolio(UpdatePortfolioDto portfolioDto);
+        Task<ServiceMessage> UpdatePortfolio(UpdatePortfolioDto portfolioDto); // Deletes all stocks from the user's portfolio and replaces them with all the given stocks
     }
 }
