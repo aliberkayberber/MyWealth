@@ -3,11 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWealth.Data", "MyWealth.Data\MyWealth.Data.csproj", "{0EDCEF58-5488-4F5C-A886-8013779863FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWealth.Data", "MyWealth.Data\MyWealth.Data.csproj", "{0EDCEF58-5488-4F5C-A886-8013779863FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWealth.Business", "MyWealth.Business\MyWealth.Business.csproj", "{E0505279-B2A4-41C0-963F-A1348CB8C273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWealth.Business", "MyWealth.Business\MyWealth.Business.csproj", "{E0505279-B2A4-41C0-963F-A1348CB8C273}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWealth.WebApi", "MyWealth.WebApi\MyWealth.WebApi.csproj", "{939CDFAE-85BA-4BFC-B966-D84F2F25D957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWealth.WebApi", "MyWealth.WebApi\MyWealth.WebApi.csproj", "{939CDFAE-85BA-4BFC-B966-D84F2F25D957}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BA2A8C12-D5F9-4006-ABD9-B67A4B0BABF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{4E1CDAC1-34E9-4B3E-847F-C7919CBDD8C4}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
