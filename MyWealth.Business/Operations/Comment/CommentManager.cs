@@ -79,9 +79,9 @@ namespace MyWealth.Business.Operations.Comment
 
         }
         // to delete comment
-        public async Task<ServiceMessage> DeleteComment(int id)
+        public async Task<ServiceMessage> DeleteComment(int userid, int stockid)
         {
-            var comment = _repository.GetById(id); // It is found by comment id
+            var comment = _repository.Get(x => x.UserId == userid && x.StockId == stockid); // It is found by comment id
 
             if (comment is null)
             {
@@ -142,9 +142,9 @@ namespace MyWealth.Business.Operations.Comment
         }
 
         // to update comment
-        public async Task<ServiceMessage> UpdateComment(int id, string updatedText)
+        public async Task<ServiceMessage> UpdateComment(int userid, int stockid, string updatedText)
         {
-            var comment = _repository.GetById(id); // comment found
+            var comment = _repository.Get(x => x.UserId == userid && x.StockId == stockid); // comment found
 
             if (comment is null)
             {

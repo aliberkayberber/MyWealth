@@ -60,11 +60,11 @@ namespace MyWealth.WebApi.Controllers
         }
 
         //to update the comment.
-        [HttpPatch("{id}/update")]
-        public async Task<IActionResult> UpdateComment(int id, string updatedText)
+        [HttpPatch("{userid}/{stockid}/update")]
+        public async Task<IActionResult> UpdateComment(int userid,int stockid, string updatedText)
         {
             //It is sent to the comment service for the transactions to be carried out.
-            var result = await _commentService.UpdateComment(id, updatedText);
+            var result = await _commentService.UpdateComment(userid,stockid, updatedText);
 
             // Checking the result
             if (!result.IsSucceed)
@@ -75,12 +75,12 @@ namespace MyWealth.WebApi.Controllers
         }
 
         // delete comment
-        [HttpDelete("{id}")]
+        [HttpDelete("{userid}/{stockid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(int userid,int stockid)
         {
             //It is sent to the comment service for the transactions to be carried out
-            var result = await _commentService.DeleteComment(id);
+            var result = await _commentService.DeleteComment(userid,stockid);
 
             // Checking the result
             if (!result.IsSucceed)

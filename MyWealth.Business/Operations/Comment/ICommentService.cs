@@ -14,8 +14,8 @@ namespace MyWealth.Business.Operations.Comment
 
         public Task<List<AllCommentDto>> GetAllComments(StockGetAllCommentDto stockGetAllComment); // To pull all comments from the user
 
-        public Task<ServiceMessage> UpdateComment(int id, string updatedText); // to update comment
+        public Task<ServiceMessage> UpdateComment(int userid,int stockid,string updatedText); // to update comment
 
-        public Task<ServiceMessage> DeleteComment(int id); // to delete comment
+        public Task<ServiceMessage> DeleteComment(int userid, int stockid); // to delete comment
     }
 }
